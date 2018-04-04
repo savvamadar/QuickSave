@@ -167,7 +167,7 @@ namespace QuickSave
                     File.WriteAllBytes(loc, await response.GetContentAsByteArrayAsync());
                 }
                 button1.Enabled = true;
-                button1.Text = "QuickSave";
+                button1.Text = "QuickSave File";
                 listView1.Enabled = true;
                 refreshListItem(listItem, 250);
                 MessageBox.Show("Download Succesful", "Success");
@@ -230,6 +230,7 @@ namespace QuickSave
                 string input = "";
                 string desc = "";
                 string src = "";
+                bool realImage = false;
                 while (input == "")
                 {
                     input = Interaction.InputBox("Give this file a name: ", "File Name", openFileDialog1.FileName.Substring(openFileDialog1.FileName.LastIndexOf("\\")+1), -1, -1);
@@ -248,6 +249,7 @@ namespace QuickSave
                     bool validImage = false;
                     while (!validImage)
                     {
+                        realImage = false;
                         if (openFileDialog1.ShowDialog() == DialogResult.OK)
                         {
                             string ext4 = openFileDialog1.FileName.Substring(openFileDialog1.FileName.Length - 4).ToLower();
@@ -256,32 +258,37 @@ namespace QuickSave
                             {
                                 pictureBox1.Image = Bitmap.FromHicon(new Icon(Icon.ExtractAssociatedIcon(openFileDialog1.FileName), new Size(16, 16)).Handle);
                                 validImage = true;
+                                realImage = true;
                             }
                             else if (ext3 == "ico")
                             {
                                 pictureBox1.Image = Bitmap.FromHicon(new Icon((openFileDialog1.FileName), new Size(16, 16)).Handle);
                                 validImage = true;
+                                realImage = true;
                             }
                             else if (ext3 == "jpg" || ext4 == "jpeg" || ext3 == "bmp" || ext3 == "png")
                             {
                                 pictureBox1.Image = Image.FromFile(openFileDialog1.FileName);
                                 validImage = true;
+                                realImage = true;
                             }
                             else
                             {
                                 MessageBox.Show("Please select an exe, ico, jpg, jpeg, bmp, or png file.","Error");
                                 pictureBox1.Image = null;
                                 validImage = false;
+                                realImage = false;
                             }
                         }
                         else
                         {
                             pictureBox1.Image = null;
                             validImage = true;
+                            realImage = false;
                         }
                     }
                 }
-                upload("/" + input, input, src, desc);
+                upload("/" + input, input, src, desc, realImage);
             }
         }
 
@@ -403,13 +410,13 @@ namespace QuickSave
                 var updated = await dbxClient.Files.UploadAsync(folder + "/1_" + fileName, WriteMode.Overwrite.Instance, body: mem);
             }
             listView1.Enabled = true;
-            button1.Text = "QuickSave";
+            button1.Text = "QuickSave File";
             button1.Enabled = true;
             refreshListItem(listItem, 250);
             MessageBox.Show("Upload Success!", "Success");
         }
 
-        async void upload(string folder, string fileName, string sourceFilePath, string fileDesc)
+        async void upload(string folder, string fileName, string sourceFilePath, string fileDesc, bool isReal)
         {
             button1.Enabled = false;
             listView1.Enabled = false;
@@ -430,7 +437,7 @@ namespace QuickSave
                 var updated = await dbxClient.Files.UploadAsync(folder + "/2_loc.txt", WriteMode.Overwrite.Instance, body: mem);
                 b2 = true;
             }
-            if (pictureBox1.Image != null)
+            if (pictureBox1.Image != null && isReal)
             {
                 var destImage = new Bitmap(16, 16);
 
@@ -469,7 +476,7 @@ namespace QuickSave
                     b4 = true;
                 }
             }
-            if ((b1 && b2 && (b3 || (!b3 && pictureBox1.Image == null)) && (b4 || (!b4 && fileDesc.Trim() == ""))))
+            if ((b1 && b2 && (b3 || (!b3 && !isReal)) && (b4 || (!b4 && fileDesc.Trim() == ""))))
             {
                 ListViewItem listItem = new ListViewItem(new string[6]);
                 listItem.UseItemStyleForSubItems = false;
@@ -494,7 +501,7 @@ namespace QuickSave
                 listItem.ToolTipText = "File location: " + listItem.SubItems[5].Text;
                 listView1.Items.Add(listItem);
                 listView1.Enabled = true;
-                button1.Text = "QuickSave";
+                button1.Text = "QuickSave File";
                 button1.Enabled = true;
                 MessageBox.Show("Upload completed.", "Success");
             }
@@ -507,7 +514,7 @@ namespace QuickSave
                 }
                 await dbxClient.Files.DeleteV2Async(folder);
                 listView1.Enabled = true;
-                button1.Text = "QuickSave";
+                button1.Text = "QuickSave File";
                 button1.Enabled = true;
                 MessageBox.Show("Couldn't save: "+s, "Failed");
             }
@@ -564,6 +571,7 @@ namespace QuickSave
 
         private void deleteFromCloudToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            folderName.Remove(rightClickedListItem.SubItems[1].Text);
             deleteFolder(rightClickedListItem.SubItems[1].Text);
         }
     }

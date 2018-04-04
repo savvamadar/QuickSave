@@ -73,8 +73,8 @@
             this.listView1.Size = new System.Drawing.Size(624, 520);
             this.listView1.TabIndex = 2;
             this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.MouseDoubleClick += listView1_MouseDoubleClick;
-            this.listView1.MouseClick += listView1_MouseRightClick;
+            this.listView1.MouseClick += this.listView1_MouseRightClick;
+            this.listView1.MouseDoubleClick += this.listView1_MouseDoubleClick;
             // 
             // button1
             // 
@@ -108,10 +108,10 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(6, 535);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(178, 39);
+            this.label1.Size = new System.Drawing.Size(176, 39);
             this.label1.TabIndex = 5;
-            this.label1.Text = "Double click to QuickSave\r\nRight click for options\r\nHover over file image for fil" +
-    "e location\r\n";
+            this.label1.Text = "Controls:\r\nDouble click an entry to resolve it\r\nRight click an entry for more opt" +
+    "ions";
             // 
             // label2
             // 
@@ -182,9 +182,9 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(645, 576);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.listView1);
             this.Controls.Add(this.geckoWebBrowser1);
             this.Controls.Add(this.label2);
