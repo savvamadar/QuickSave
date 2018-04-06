@@ -26,6 +26,8 @@ up-to-date version of the file will be stored in their Dropbox account and readi
 Features
 --------
 - OAuth Technology
+- Upload/ Download Individual Files
+- Upload/ Download Folder Structures
 - Intuitive, though admittedly plain, UI
 - Context Sensitive Menu Controls
 - Colors
